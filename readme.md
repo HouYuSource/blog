@@ -40,7 +40,7 @@ blog是一个开源的Java项目 ( 个人站点 / 博客 )
 
 * #### V2.0.0 是一个个人站点 , 界面如下
 1. 前台显示
-![在这里插入图片描述](https://shaines.cn/view/image?src=https://img-blog.csdnimg.cn/20190727154836916.png)
+![在这里插入图片描述](https://shaines.cn/view/image?src=https://img-blog.csdnimg.cn/20191027221240616.png)
 2. 管理中心展示
 ![在这里插入图片描述](https://shaines.cn/view/image?src=https://img-blog.csdnimg.cn/20190727154851502.png)
 
