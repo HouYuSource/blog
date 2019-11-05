@@ -1,0 +1,101 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body>
+
+<!-- banner start -->
+<div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
+    <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}'>
+        <ul class="am-slides">
+            <li th:each="blog : ${hotList}">
+                <img src="/assets/i/b1.jpg" th:src="${blog.displayImg}" class="am-slides-img" height="400px">
+                <div class="blog-slider-desc am-slider-desc">
+                    <div class="blog-text-center blog-slider-con">
+                        <a th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${blog.id}">
+                            <label class="blog-color" style="margin-top: 5rem; font-size: x-large; cursor: pointer">[[${blog.title}]]</label>
+                            <br>
+                            <span th:text="${#dates.format(blog.createDate, 'yyyy/MM/dd')}">2015/10/9</span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- banner end -->
+
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed">
+    <div id="main-container-father">
+        <div class="am-u-md-8 am-u-sm-12" th:fragment="main-container" id="main-container">
+
+            <article class="am-g blog-entry-article" th:each="blog : ${page.content}">
+                <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                    <img src="/assets/i/f10.jpg" th:src="${blog.displayImg}" alt="" class="am-u-sm-12" style="height: 205px">
+                </div>
+                <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                    <div>
+                        <!--<h1><a href="" th:href="'/blog/detail/' + ${blog.id}" th:text="${blog.title}">标题</a></h1>-->
+                        <h1><a href="" th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${blog.id}" th:text="${blog.title}">我本楚狂人，凤歌笑孔丘</a></h1>
+                        <p th:text="${blog.summary}">我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。</p>
+                        <p><a href="" class="blog-continue">continue reading</a></p>
+                    </div>
+                    <div>
+                        <div style="float: left">
+                            <span th:text="${blog.username}"> @amazeUI &nbsp;</span>
+                            <a href="" class="blog-color" th:text="${blog.catalogName}" style="margin-left: 15px">article &nbsp;</a>
+                        </div>
+                        <div style="float: right">
+                            <span style="color: #CCC" th:text="${#dates.format(blog.createDate, 'yyyy/MM/dd')}">2015/10/9</span>
+                        </div>
+                    </div>
+                    <hr style="border: 2px">
+                </div>
+            </article>
+
+            <ul class="am-pagination" style="text-align: center">
+                <li class="am-pagination-prev" th:if="${page.number gt 0}" data-th-attr="pageIndex=${page.number}" onclick="handlePage($(this).attr('pageIndex'))">
+                    <a href="javascript:;">&laquo; Prev</a>
+                    <!--这个a标签主要是帮助爬虫翻页的, 浏览器爬虫识别是一个完整的URL, 那么就会加入队列中接着抓取数据-->
+                    <a th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/page/'+ ${page.number}" style="display: none">&laquo; Prev</a>
+                </li>
+                <span>共 [[${page.totalElements}]] 条</span>
+                <li class="am-pagination-next" th:if="${page.number + 2 le page.totalPages}" data-th-attr="pageIndex=${page.number + 2}" onclick="handlePage($(this).attr('pageIndex'))">
+                    <a href="javascript:;">Next &raquo;</a>
+                    <!--这个a标签主要是帮助爬虫翻页的, 浏览器爬虫识别是一个完整的URL, 那么就会加入队列中接着抓取数据-->
+                    <a th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/page/'+ ${page.number + 2}" style="display: none">Next &raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+</div>
+<!-- content end -->
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+<!--<div style="position: fixed; right: 100px;top:150px; z-index: 999">回到首页</div>-->
+
+<style>
+    @media (max-width:641px) {
+        /** 如果宽度小于 641px 则调用这个样式 */
+        .am-slides-img {
+            height: 200px !important;
+        }
+        .blog-entry-article > div.blog-entry-img > img {
+            height: 200px !important;
+        }
+        .blog-slider-con label {
+            margin-top: 1.2rem !important;
+            font-size: inherit !important;
+            line-height: normal;
+        }
+    }
+    .blog-slider-con {
+        padding: 0px;
+    }
+</style>
+
+</body>
+</html>

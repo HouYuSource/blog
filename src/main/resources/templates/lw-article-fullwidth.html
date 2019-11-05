@@ -1,0 +1,350 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<link rel="stylesheet" href="/assets/editor/css/editormd.preview.css"/>
+<body>
+
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed blog-content">
+    <div class="am-u-sm-12">
+        <article class="am-article blog-article-p">
+            <div class="am-article-hd">
+                <h1 class="am-article-title blog-text-center" th:text="${data.title}" th:attr="blog-id=${data.id}">我的文章哎</h1>
+                <p class="am-article-meta blog-text-center" style="font-size: 1.4rem;">
+                    <span><a href="#" class="blog-color">article</a></span> -
+                    <span><a href="#">@[[${data.username}]] &nbsp;</a></span>
+                    <span><a href="#">[[${#dates.format(data.createDate, 'yyyy/MM/dd')}]]&nbsp;&nbsp;</a></span>
+                    <span><a href="#"> 阅读: [[${data.readSize}]] &nbsp;</a></span>
+                    <span><a href="#"> 点赞: [[${data.voteSize}]] &nbsp;</a></span>
+                </p>
+
+            </div>
+            <div class="am-article-bd">
+                <img src="/assets/i/f17.jpg" th:src="${data.displayImg}" alt="" class="blog-entry-img blog-article-margin details-img" style="width: 100%; height: 312px"><!-- height="312px"-->
+                <hr>
+                <div id="markdown-view" class="blog-main-content">
+                    <textarea id="append-test" style="display:none;">[[${data.content}]]</textarea>
+                </div>
+            </div>
+        </article>
+
+        <div class="am-g blog-article-widget blog-article-margin">
+            <div class="am-u-lg-4 am-u-md-5 am-u-sm-7 am-u-sm-centered blog-text-center">
+                <span class="am-icon-tags"> &nbsp;</span>
+                <a href="javascript:;" class="blog-color">标签 &nbsp;</a>
+                <span th:each="tag : ${tagList}" style="font-size: 17px">[[${tag}]]、&nbsp;&nbsp;</span>
+
+                <hr>
+                <a onmouseover="tip(this)" th:attr="title='github：<br>' + ${userGithub}" th:href="${userGithub}"  target="_blank"><span class="am-icon-github am-icon-fw blog-icon"></span></a>
+                <a onmouseover="tip(this)" th:attr="title='mail：<br>' + ${userMail}"     th:href="'mailto:' + ${userMail}" target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">mail</span></a>
+                <a onmouseover="tip(this)" th:attr="title='csdn：<br>' + ${userCsdn}"     th:href="${userCsdn}"    target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">csdn</span></a>
+                <a onmouseover="tip(this)" th:attr="title='QQ：<br>' + ${userQq}"            href="javascript:;"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+            </div>
+        </div>
+
+        <hr>
+        <div class="am-g blog-author blog-article-margin">
+            <div class="am-u-sm-3 am-u-md-3 am-u-lg-2">
+                <img th:src="${userIco}" alt="" class="am-circle" style="width: 10rem; height: 10rem;"><!--blog-author-img -->
+            </div>
+            <div class="am-u-sm-9 am-u-md-9 am-u-lg-10">
+                <h3><span>作者 &nbsp;: &nbsp;</span><span class="blog-color">[[${userName}]]</span></h3>
+                <p th:utext="${userDescription}"></p>
+                <p th:utext="${userExplain}"></p>
+            </div>
+        </div>
+        <hr>
+        <ul class="am-pagination blog-article-margin">
+            <li class="am-pagination-prev" th:if="${prev != null}"><a onmouseover="tip(this)" th:attr="title=${prev.title}" th:href="'/blog/detail/' + ${prev.id}">&laquo;  [[${#strings.abbreviate(prev.title,15)}]]</a></li>
+            <li class="am-pagination-next" th:if="${next != null}"><a onmouseover="tip(this)"  th:attr="title=${next.title}" th:href="'/blog/detail/' + ${next.id}">[[${#strings.abbreviate(next.title,15)}]] &raquo;</a></li>
+        </ul>
+
+        <hr>
+
+        <form class="am-form comment-form" th:if="${data.canComment} == 1">
+            <h3 class="blog-comment">评论</h3>
+            <fieldset>
+                <div class="am-form-group am-u-sm-6 blog-clear-left">
+                    <input type="text" class="nickname" placeholder="nickname [ nonnull ]" onBlur="checkNickname($(this).val())">
+                </div>
+                <div class="am-form-group am-u-sm-6 blog-clear-right">
+                    <input type="email" class="email" placeholder="email [ nonnull ]" onBlur="checkEmail($(this).val())">
+                </div>
+                <div class="am-form-group">
+                    <textarea class="content" rows="4" placeholder="一字千金 ~~" onBlur="checkContent($(this).val())"></textarea>
+                </div>
+                <p>
+                    <button type="button" onclick="submitVote()" class="am-btn am-btn-success">点赞博文</button>
+                    <button type="button" onclick="submitComment()" class="am-btn am-btn-primary">发表评论</button>
+                </p>
+            </fieldset>
+        </form>
+
+        <hr>
+
+        <div class="am-u-sm-12">
+            <div th:each="comment, commentStat : ${commentList}">
+                <div class="am-u-sm-2 am-u-md-1 am-u-lg-1">
+                    <img src="/assets/i/f15.jpg" th:src="'/images/comment/' + (${commentStat.index} % 10) + '.png'" style="width: 7rem; height: 7rem;"><!--class="am-circle"-->
+                </div>
+                <div class="am-u-sm-10 am-u-md-11 am-u-lg-11" style="padding-left: 3rem">
+                    <div>
+                        <label style="font-size: 20px" th:text="${comment.nickname}" th:attr="title='email：' + ${comment.email}">272***308@qq.com</label>
+                        <span style="margin-left: 2rem; color: #CCCCCC" th:text="${#dates.format(comment.createDate, 'yyyy/MM/dd')}">2019/09/10</span>
+                        <span style="margin-left: 2rem; color: #CCCCCC; font-size: 15px" th:text="'# ' + (${commentStat.size} - ${commentStat.index}) + '楼'"> #1楼</span>
+                    </div>
+                    <p class="am-text-sm" th:text="${comment.content}">blog 是一个开源的Java项目 ( 个人站点 / 博客 )支持响应式，多种布局，包括主页、文章页、友链、作品以页面等 [ powered by houyu ]
+                        前端展示使用Thymeleaf模板引擎，后端管理使用Vue + element-ui + webpack v3
+                    </p>
+                </div>
+                <hr style="border:1px dashed #CCC;">
+            </div>
+            <div th:if="${#lists.isEmpty(commentList)}">
+                <p>暂时没有评论哦~，你来评论个吧！！</p>
+            </div>
+        </div>
+    </div>
+
+    <!--点击图片显示图床-->
+    <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.85);z-index:2;width:100%;height:100%;display:none;">
+        <div id="innerdiv" style="position:absolute;">
+            <img id="bigimg" style="border:5px solid #fff;" src=""/>
+        </div>
+    </div>
+</div>
+<!-- content end -->
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+
+<script src="/assets/editor/lib/marked.min.js"></script>
+<script src="/assets/editor/lib/prettify.min.js"></script>
+<script src="/assets/editor/lib/raphael.min.js"></script>
+<script src="/assets/editor/lib/underscore.min.js"></script>
+<script src="/assets/editor/lib/sequence-diagram.min.js"></script>
+<script src="/assets/editor/lib/flowchart.min.js"></script>
+<script src="/assets/editor/lib/jquery.flowchart.min.js"></script>
+<script src="/assets/editor/editormd.js"></script>
+
+<style type="text/css">
+
+    @media screen and (max-width:641px) {
+        .am-article-bd .details-img {
+            height: 18rem !important;
+        }
+    }
+
+    /** 美化markdown的样式 start */
+    #markdown-view {
+        padding: 0px;
+        font-size: initial !important;
+        line-height: 2.8rem !important;
+        color: #000000;
+    }
+    #markdown-view code {
+        white-space: inherit;
+    }
+    #markdown-view pre code {
+        white-space: pre !important;
+    }
+    #markdown-view pre {
+        background-color: #EEEEEE !important;
+    }
+    #markdown-view blockquote {
+        background-color: #EEF0F4;
+        padding: 10px 15px;
+        border-radius: 3px;
+        font-size: initial;
+        border-left: 8px solid #DDDFE4;
+        line-height: 1.8rem;
+    }
+    /** 美化markdown的样式  end  */
+
+</style>
+
+<script type="text/javascript">
+
+    /** 解析MD */
+    function parseMarkdown() {
+        editormd.markdownToHTML("markdown-view", {
+            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            emoji           : true,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : true,  // 默认不解析
+            sequenceDiagram : true,  // 默认不解析
+        });
+    }
+    let lastTime = Number(new Date().getTime());
+    function tip(v){
+        if (Number(new Date().getTime() - lastTime > 600)) {
+            toastr.info($(v).attr('title'));
+            lastTime = Number(new Date().getTime());
+        }
+    }
+    /** 批量给markdown的图片添加事件 */
+    function imgAddClick() {
+        $(".blog-main-content img").click(function(){
+            var _this = $(this);//将当前的pimg元素作为_this传入函数
+            imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+        });
+    }
+    /** 加载完页面执行 */
+    $(function() {
+        parseMarkdown();
+        imgAddClick()
+    });
+    /** 显示图片 */
+    function imgShow(outerdiv, innerdiv, bigimg, _this) {
+        var src = _this.attr("src");// 获取当前点击的pimg元素中的src属性
+        $(bigimg).attr("src", src);// 设置#bigimg元素的src属性
+
+        /* 获取当前点击图片的真实大小，并显示弹出层及大图 */
+        $("<img/>").attr("src", src).load(function () {
+            var windowW = $(window).width();// 获取当前窗口宽度
+            var windowH = $(window).height();// 获取当前窗口高度
+            var realWidth = this.width;// 获取图片真实宽度
+            var realHeight = this.height;// 获取图片真实高度
+            var imgWidth, imgHeight;
+            var scale = 0.95;// 缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放
+
+            if (realHeight > windowH * scale) {// 判断图片高度
+                imgHeight = windowH * scale;// 如大于窗口高度，图片高度进行缩放
+                imgWidth = imgHeight / realHeight * realWidth;// 等比例缩放宽度
+                if (imgWidth > windowW * scale) {// 如宽度扔大于窗口宽度
+                    imgWidth = windowW * scale;// 再对宽度进行缩放
+                }
+            } else if (realWidth > windowW * scale) {// 如图片高度合适，判断图片宽度
+                imgWidth = windowW * scale;// 如大于窗口宽度，图片宽度进行缩放
+                imgHeight = imgWidth / realWidth * realHeight;// 等比例缩放高度
+            } else {// 如果图片真实高度和宽度都符合要求，高宽不变
+                imgWidth = realWidth;
+                imgHeight = realHeight;
+            }
+            $(bigimg).css("width", imgWidth);// 以最终的宽度对图片缩放
+
+            var w = (windowW - imgWidth) / 2;// 计算图片与窗口左边距
+            var h = (windowH - imgHeight) / 2;// 计算图片与窗口上边距
+            $(innerdiv).css({"top": h, "left": w});// 设置#innerdiv的top和left属性
+            $(outerdiv).fadeIn("fast");// 淡入显示#outerdiv及.pimg
+        });
+
+        $(outerdiv).click(function () {// 再次点击淡出消失弹出层
+            $(this).fadeOut("fast");
+        });
+    }
+    /** 校验昵称 */
+    function checkNickname(val) {
+         if (!val) return toastr.warning("昵称不可以为空");
+         if (String(val).length < 2 || String(val).length > 10) return toastr.warning("昵称限制为 2 ~ 10 字");
+         return true;
+    }
+    /** 校验邮箱 */
+    function checkEmail(val) {
+        var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+        if(!reg.test(val)) return toastr.warning("邮箱格式不正确~");
+        return true;
+    }
+    /** 校验内容 */
+    function checkContent(val) {
+        if (!val) return toastr.warning("内容不可以为空");
+        if (String(val).length < 2 || String(val).length > 500) return toastr.warning("内容限制为 2 ~ 500 字");
+        return true;
+    }
+    /** 生成本次操作的token */
+    function generateToken() {
+        let token = null;
+        $.ajax({
+            url: "/generate-token",
+            type: "GET",
+            contentType: "application/json;charset=UTF-8",
+            data: {
+                "email": $(".comment-form .email").val()
+            },
+            async: false,
+            success: function(data) {
+                if (data.code === 200) {
+                    token = data.data
+                } else {
+                    toastr.warning(data.msg);
+                }
+            },
+            error : function() {
+                toastr.error("error!");
+            }
+        });
+        return token;
+    }
+    /** 点赞博客 */
+    function submitVote() {
+        if (checkNickname($(".comment-form .nickname").val()) !== true
+                || checkEmail($(".comment-form .email").val()) !== true)
+            return;
+
+        let token = generateToken();
+        $.ajax({
+            url: "/vote",
+            type: "POST",
+            dataType:"json",
+            contentType: "application/json;charset=UTF-8",
+            data:JSON.stringify({
+                "email":$(".comment-form .email").val(),
+                "blogId": $(".am-article-hd h1").attr("blog-id"),
+                "blogTitle": $(".am-article-hd h1").text()
+            }),
+            beforeSend: function(request) {
+                request.setRequestHeader("token", token);
+            },
+            success: function(data){
+                if (data.code === 200) return toastr.success("点赞成功");
+                if (data.code !== 200) return toastr.warning(data.msg);
+            },
+            error : function() {
+                toastr.error("error!");
+            }
+        });
+    }
+    /** 评论博客 */
+    function submitComment() {
+        if (checkNickname($(".comment-form .nickname").val()) !== true
+                || checkEmail($(".comment-form .email").val()) !== true
+                || checkContent($(".comment-form .content").val()) !== true)
+            return;
+
+        let token = generateToken();
+        $.ajax({
+            url: "/comment",
+            type: "POST",
+            dataType:"json",
+            contentType: "application/json;charset=UTF-8",
+            data:JSON.stringify({
+                nickname: $(".comment-form .nickname").val(),
+                email: $(".comment-form .email").val(),
+                blogId: $(".am-article-hd h1").attr("blog-id"),
+                blogTitle: $(".am-article-hd h1").text(),
+                content: $(".comment-form .content").val(),
+                toEmail: ""
+            }),
+            beforeSend: function(request) {
+                request.setRequestHeader("token", token);
+            },
+            success: function(data){
+                if (data.code === 200) {
+                    $(".comment-form .nickname").val("");
+                    $(".comment-form .email").val("");
+                    $(".comment-form .content").val("")
+                    return toastr.success("评论成功, 审核之后会展示在下方评论区哦~");
+                }
+                if (data.code !== 200) return toastr.warning(data.msg);
+            },
+            error : function() {
+                toastr.error("error!");
+            }
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>

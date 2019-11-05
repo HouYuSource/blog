@@ -1,0 +1,34 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
+<body>
+
+<!-- content srart -->
+<div class="am-g am-g-fixed blog-fixed blog-content">
+    <div class="am-u-sm-12" style="line-height: 3.3rem;">
+        <h1 class="blog-text-center">-- 存档 --</h1>
+        <div class="timeline-year" th:each="year : ${data}">
+            <h1>[[${year.key}]]</h1>
+            <ul th:each="month : ${year.value}"><!--/*--> <!--th:each="month : *{year.value}"--> <!--*/-->
+                <h3>[[${month.key}]] 月</h3>
+                <li th:each="blog : ${month.value}">
+                    <span class="am-u-sm-4 am-u-md-2 timeline-span" th:text="${#dates.format(blog.createDate, 'yyyy/MM/dd')}">2015/10/18</span>
+                    <span class="am-u-sm-8 am-u-md-6"><a th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${blog.id}" th:text="${#strings.abbreviate(blog.title, 35)}">君埋泉下泥销骨，我寄人间雪满头</a></span>
+                    <span class="am-u-sm-4 am-u-md-2 am-hide-sm-only" th:text="${blog.catalogName}">风又起</span>
+                    <span class="am-u-sm-4 am-u-md-2 am-hide-sm-only" th:text="${blog.username}">amazeui</span>
+                </li>
+            </ul>
+            <br>
+        </div>
+    </div>
+    <hr>
+</div>
+
+
+</div>
+<!-- content end -->
+
+<div th:replace="~{fragments/footer :: footer}">...</div>
+
+</body>
+</html>

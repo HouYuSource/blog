@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body data-th-fragment="footer">
+
+<footer class="blog-footer">
+    <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-footer-padding">
+        <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
+            <h3>blog 简介</h3>
+            <p class="am-text-sm">blog 是一个开源的Java项目 ( 个人站点 / 博客 )
+                <br>支持响应式，多种布局，包括主页、文章页、友链、作品页面等 [ powered by houyu ]
+                <br>前端展示使用 Thymeleaf 模板引擎，后端管理使用 Vue + element-ui + webpack v3</p>
+            <h3>源码地址</h3>
+            <p class="am-text-sm">后台 + 展示页 ：<br><a href="https://github.com/HouYuSource/blog">https://github.com/HouYuSource/blog</a><br>
+                管理后台：<br><a href="https://github.com/HouYuSource/blog-admin-ui">https://github.com/HouYuSource/blog-admin-ui</a></p>
+        </div>
+        <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
+            <h3>联系我</h3>
+            <p>
+                <a onmouseover="tip(this)" th:attr="title='github：<br>' + ${userGithub}" th:href="${userGithub}"  target="_blank"><span class="am-icon-github am-icon-fw blog-icon"></span></a>
+                <a onmouseover="tip(this)" th:attr="title='mail：<br>' + ${userMail}"     th:href="'mailto:' + ${userMail}" target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">mail</span></a>
+                <a onmouseover="tip(this)" th:attr="title='csdn：<br>' + ${userCsdn}"     th:href="${userCsdn}"    target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">csdn</span></a>
+                <a onmouseover="tip(this)" th:attr="title='QQ：<br>' + ${userQq}"            href="javascript:;"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+            </p>
+            <h3>Credits</h3>
+            <p>追求卓越，然时间、经验、能力有限。写出来的博文有很多不足的地方，希望大家包容、不吝赐教，给我提意见、建议。感谢你们！</p>
+        </div>
+        <div class="am-u-sm-12 am-u-md-4- am-u-lg-4">
+            <h1>我们站在巨人的肩膀上</h1>
+            <ul>
+                <li>Spring boot 2.1.4</li>
+                <li>Spring mvc</li>
+                <li>Spring data jpa</li>
+                <li>Thymeleaf</li>
+                <li>Amaze UI</li>
+                <li>Element-ui</li>
+                <li>Vue.js</li>
+                <li>Zepto.js</li>
+                <li>...</li>
+            </ul>
+        </div>
+    </div>
+    <div class="blog-text-center">© 2018 粤ICP备18142882号</div>
+</footer>
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/assets/js/2.1.4.jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+<script src="/assets/js/1.11.3.jquery.min.js"></script>
+<script src="/assets/js/2.8.3.modernizr.js"></script>
+<script src="/assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/toastr.min.js"></script>
+
+<script>
+
+    /** 切换选中的样式 start */
+    function _switchClass(current) {
+        localStorage.setItem("action_class", $(current).attr('class'));
+        selectAction();
+    }
+    function selectAction() {
+        $("#blog-collapse li .am-active").removeClass('am-active');
+        let url = window.location.href;
+        if (url.endsWith(window.location.host + "/") || url.endsWith('index')) {/*url.endsWith(window.location.hostname) || */
+            $(".custom-li-1").addClass('am-active');
+        } else {
+            $("." + localStorage.getItem("action_class")).addClass('am-active');
+        }
+    }
+    $(selectAction);
+    /** 切换选中的样式  end  */
+
+    let currentKeyword = "";
+    /**
+     * 处理搜索
+     */
+    function handleSearch(keyword, isClearSearchInput) {
+        currentKeyword = keyword;
+        if (isClearSearchInput === true) {
+            $('.search-input').val('');
+        }
+        handlePage(1)
+    }
+    /** 处理分页 */
+    function handlePage(pageIndex) {
+        $.ajax({
+            url: "/blog/page/" + pageIndex,
+            contentType : 'application/json',
+            data:{
+                "async":true,
+                "keyword": currentKeyword
+            },
+            success: function(data){
+                // let url = window.location.href;
+                // if (!url.endsWith(window.location.host + "/") || !url.endsWith('index')) {}
+                $("#main-container-father").html(data);
+                window.location.href = '#main-container'
+                // $("#main-container").replaceWith(data);
+            },
+            error : function() {
+                toastr.error("error!");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

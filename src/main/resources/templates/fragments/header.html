@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" data-th-fragment="header">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="" th:content="${description} ?: '97程序员Shy [ 后宇 ]，是一个关注编程，热爱技术的开发者，热衷于 【Java后端】，【数据爬虫】，【大数据领域】。20岁时用30岁的认真和心态来做事，<br>30岁时就可以享受别人40岁的成果。'">
+    <meta name="keywords" content="" th:content="${keywords} ?: 'shaines,shaines.cn,blog,shy,houyu,houyu blog,jinglong,后宇,后宇的博客'">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>[[${title} ? ${title} : 'shaines | blog']]</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <meta name="msapplication-TileColor" content="#0e90d2">
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/toastr.min.css">
+</head>
+<body id="blog-article-sidebar">
+<hr>
+
+<!-- nav start -->
+<nav class="am-g am-g-fixed blog-fixed blog-nav">
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button"
+            data-am-collapse="{target: '#blog-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="blog-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav">
+            <li class="custom-li-1" onclick="_switchClass(this)">
+                <a href="/" style="cursor: pointer">首页</a>
+                <a th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')}" style="cursor: pointer; display: none">首页</a>
+            </li>
+            <li class="custom-li-3" onclick="_switchClass(this)"><a href="/blog/detail/1150038168796479488" th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${indexAbout}">关于</a></li>
+            <li class="custom-li-4" onclick="_switchClass(this)"><a href="/blog/timeline"                   th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/timeline'">存档</a></li>
+            <li class="custom-li-5" onclick="_switchClass(this)"><a href="/blog/detail/1150038168796479488" th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${indexAchievements}">小小成绩</a></li>
+            <li class="custom-li-6" onclick="_switchClass(this)"><a href="/blog/timeline"                   th:href="${#strings.substringBefore(#httpServletRequest.getRequestURL(), '/blog/')} + '/blog/detail/' + ${indexLink}">友链</a></li>
+        </ul>
+        <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
+            <div class="am-form-group">
+                <input type="text" class="am-form-field am-input-sm search-input" onBlur="handleSearch($(this).val(), false)" placeholder="search article">
+            </div>
+        </form>
+    </div>
+</nav>
+<!-- nav end -->
+<hr>
+</body>
+</html>

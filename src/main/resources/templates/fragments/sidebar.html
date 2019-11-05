@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="am-u-md-4 am-u-sm-12 blog-sidebar" data-th-fragment="sidebar">
+    <div class="blog-sidebar-widget blog-bor">
+        <h2 class="blog-text-center blog-title"><span>About Me</span></h2>
+        <img th:src="${userIco}" alt="about me" class="blog-entry-img" style="width: 100%; height: 213px;">
+        <p th:text="${userName}">程序猿</p>
+        <p th:utext="${userDescription}"></p>
+        <p th:utext="${userMotto}"></p>
+    </div>
+    <div class="blog-sidebar-widget blog-bor">
+        <h2 class="blog-text-center blog-title"><span>Contact Me</span></h2>
+        <p>
+            <a onmouseover="tip(this)" th:attr="title='github：<br>' + ${userGithub}" th:href="${userGithub}"  target="_blank"><span class="am-icon-github am-icon-fw blog-icon"></span></a>
+            <a onmouseover="tip(this)" th:attr="title='mail：<br>' + ${userMail}"     th:href="'mailto:' + ${userMail}" target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">mail</span></a>
+            <a onmouseover="tip(this)" th:attr="title='csdn：<br>' + ${userCsdn}"     th:href="${userCsdn}"    target="_blank"><span class="am-icon-fw blog-icon" style="width: 56px; font-weight:bold">csdn</span></a>
+            <a onmouseover="tip(this)" th:attr="title='QQ：<br>' + ${userQq}"            href="javascript:;"><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
+        </p>
+    </div>
+    <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g">
+        <h2 class="blog-title"><span>Tag Cloud</span></h2>
+        <div class="am-u-sm-12 blog-clear-padding">
+            <span th:each="tag : ${tagMapper}" data-th-attr="alt=${tag.value},keyword=${tag.key}" class="blog-tag" style="border-radius: 2px; cursor:pointer;" onclick="handleSearch($(this).attr('keyword'), true)"><!-- background-color: white-->
+                <div th:text="${tag.key}" style="float: left"></div>
+                <div style="width: 18px; font-size: 9px; float: right">
+                    <span th:text="${tag.value}"></span>
+                </div>
+            </span>
+        </div>
+    </div>
+    <div class="blog-sidebar-widget blog-bor">
+        <h2 class="blog-title"><span>Catalog Cloud</span></h2>
+        <ul class="am-list">
+            <li th:each="catalog : ${catalogList}" data-th-attr="keyword=${catalog['catalogName']}" onclick="handleSearch($(this).attr('keyword'), true)"><a href="javascript:;">[[${catalog['catalogName']}]]</a></li>
+        </ul>
+    </div>
+    <script>
+        let lastTime = Number(new Date().getTime());
+        function tip(v){
+            if (Number(new Date().getTime() - lastTime > 600)) {
+                toastr.info($(v).attr('title'));
+                lastTime = Number(new Date().getTime());
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
