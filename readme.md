@@ -66,10 +66,6 @@ https://github.com/Nirongxu/vue-xuAdmin
 
 ---
 
-# 部署或者修改为本地注意事项
-
-* 修改 cn.shaines.blog.config.Constants.ADDRESS
-* 修改 static/js/common.js baseUrl
 
 # 配置邮箱账号
 * cn.shaines.blog.utils.MailUtil
